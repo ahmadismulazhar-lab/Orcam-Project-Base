@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Orcam Project Base - Android Custom Rom</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f6f1fb;--surface:#fff;--surface2:#ece3f6;--text:#24142f;--muted:#6d5c80;--line:#d9ccea;--accent:#b4570a;--accent-ink:#fff;--ok:#2c8a5a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1226;--surface:#261a35;--surface2:#31224a;--text:#f1e9fb;--muted:#a99bbd;--line:#3a2a4d;--accent:#ffb454;--accent-ink:#2a1700;--ok:#6fd3a0}}
+:root[data-theme="dark"]{--bg:#1b1226;--surface:#261a35;--surface2:#31224a;--text:#f1e9fb;--muted:#a99bbd;--line:#3a2a4d;--accent:#ffb454;--accent-ink:#2a1700;--ok:#6fd3a0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 48px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
+.brand i{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--accent);margin-right:8px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+h1{font-size:clamp(2rem,7vw,3.6rem);line-height:1.02;letter-spacing:-.03em;margin:44px 0 12px;font-weight:800;max-width:14ch}
+.lead{color:var(--muted);max-width:52ch;margin:0 0 28px}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tab{background:none;border:0;padding:10px 14px;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--text);border-color:var(--accent);font-weight:600}
+.tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.search{flex:1 1 220px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;color:var(--text);font:inherit}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.9rem}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.count{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.card h3{margin:0;font-size:1.1rem;letter-spacing:-.01em}
+.meta{color:var(--muted);font-size:.88rem;margin:0}
+.tag{align-self:flex-start;background:var(--surface2);border-radius:6px;padding:2px 10px;font-size:.8rem;font-weight:600}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto;padding-top:6px}
+.vote{background:none;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.9rem}
+.vote[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:600}
+.dl{background:var(--accent);color:var(--accent-ink);border:0;border-radius:999px;padding:8px 18px;font-weight:600}
+.empty{padding:40px 0;color:var(--muted)}
+footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:10px;opacity:0;transition:.25s;pointer-events:none}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+.card h3 a{color:inherit;text-decoration:none}.card h3 a:hover{color:var(--accent);text-decoration:underline}
+.back{color:var(--muted);text-decoration:none;display:inline-block;margin:28px 0 14px}.back:hover{color:var(--text)}
+.banner{height:clamp(140px,28vw,240px);border-radius:16px;display:flex;align-items:flex-end;padding:18px;font-weight:800;font-size:1.6rem;letter-spacing:-.02em;color:#fff;margin-bottom:18px;background:linear-gradient(135deg,hsl(var(--h) 55% 32%),hsl(calc(var(--h) + 50) 60% 18%))}
+.st{background:var(--ok);color:var(--bg)}
+.dt{margin:12px 0 6px;font-size:clamp(1.8rem,6vw,2.6rem);max-width:none}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 22px}
+.pane h4{margin:26px 0 8px;font-size:1.05rem}.pane ul,.pane ol{margin:0;padding-left:22px;color:var(--muted)}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:6px 18px;margin:0;color:var(--muted)}.kv b{color:var(--text);font-weight:600}
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.shot{aspect-ratio:9/19;border-radius:12px;background:var(--surface2);border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);font-size:.85rem}
+.cm{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px}
+textarea.search{width:100%;min-height:80px;margin:10px 0;display:block;resize:vertical}
+a.dl{text-decoration:none;display:inline-block}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="brand"><i></i>Orcam Project</div>
+<button class="ghost" id="theme" aria-label="Toggle theme">Theme</button>
+</header>
+<section id="list"><h1>Ports, ROMs and kernels from the community</h1>
+<p class="lead">Browse builds, vote for the ones that work, and download them to flash.</p>
+
+<div class="tabs" role="tablist">
+<button class="tab" role="tab" data-s="new" aria-selected="true">Newest</button>
+<button class="tab" role="tab" data-s="pop" aria-selected="false">Most popular</button>
+<button class="tab" role="tab" data-s="dl" aria-selected="false">Most downloaded</button>
+</div>
+<div class="tools">
+<input class="search" id="q" type="search" placeholder="Search by name or device" aria-label="Search posts">
+<div class="chips" id="chips"></div>
+</div>
+<p class="count" id="count"></p>
+<div class="grid" id="grid"></div></section>
+<section id="detail" hidden></section>
+<footer>Orcam Project Base is a community project. Sample data shown for design preview.</footer>
+</div>
+<div id="toast" role="status"></div>
+
+<script>
+const POSTS=[
+{id:1,n:"LunarOS 2.1",t:"Custom ROM",d:"Redmi Note 12",a:"Android 14",s:"1.4 GB",v:128,dl:5400,age:2},
+{id:2,n:"HyperPort Lite",t:"Port",d:"Poco X3 NFC",a:"Android 14",s:"1.1 GB",v:96,dl:3900,age:5},
+{id:3,n:"Treble GSI Vanilla",t:"GSI",d:"Any Treble device",a:"Android 15",s:"980 MB",v:210,dl:12800,age:9},
+{id:4,n:"Ember Kernel r14",t:"Custom Kernel",d:"Galaxy A52",a:"Android 13",s:"24 MB",v:64,dl:2100,age:1},
+{id:5,n:"OrangeFox R12.1",t:"Custom Recovery",d:"Realme 8",a:"Android 12–14",s:"58 MB",v:152,dl:8700,age:14},
+{id:6,n:"CloudOS Stable",t:"Custom ROM",d:"Moto G84",a:"Android 15",s:"1.6 GB",v:73,dl:2600,age:3},
+{id:7,n:"MIUI Global Port",t:"Port",d:"Infinix Hot 30",a:"Android 13",s:"1.3 GB",v:88,dl:4100,age:7},
+{id:8,n:"Silk Kernel v3",t:"Custom Kernel",d:"Poco F5",a:"Android 14",s:"31 MB",v:119,dl:6300,age:11}
+];
+const TYPES=["All types","Port","Custom ROM","GSI","Custom Kernel","Custom Recovery"];
+let sort="new",type="All types",query="",voted=new Set();
+try{voted=new Set(JSON.parse(localStorage.getItem("votes")||"[]"))}catch(e){}
+const $=id=>document.getElementById(id);
+const fmt=n=>n>=1000?(n/1000).toFixed(1).replace(".0","")+"k":n;
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("on"),1800)}
+function render(){
+$("chips").innerHTML=TYPES.map(x=>`<button class="chip" data-t="${x}" aria-pressed="${x===type}">${x}</button>`).join("");
+let l=POSTS.filter(p=>(type==="All types"||p.t===type)&&(p.n+" "+p.d).toLowerCase().includes(query.toLowerCase()));
+l.sort((a,b)=>sort==="pop"?b.v-a.v:sort==="dl"?b.dl-a.dl:a.age-b.age);
+$("count").textContent=l.length+(l.length===1?" post":" posts")+" available";
+$("grid").innerHTML=l.length?l.map(p=>{const on=voted.has(p.id);return `<article class="card">
+<span class="tag">${p.t}</span><h3><a href="#/post/${p.id}">${p.n}</a></h3>
+<p class="meta">${p.d} · ${p.a} · ${p.s}</p>
+<p class="meta">${fmt(p.dl)} downloads</p>
+<div class="row"><button class="vote" data-v="${p.id}" aria-pressed="${on}">▲ ${p.v+(on?1:0)}</button>
+<button class="dl" data-d="${p.id}">Download</button></div></article>`}).join(""):`<p class="empty">No posts match. Try another type or clear the search.</p>`;
+}
+document.addEventListener("click",e=>{
+const c=e.target.closest("button");if(!c)return;
+if(c.dataset.s){sort=c.dataset.s;document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===c));render()}
+else if(c.dataset.t){type=c.dataset.t;render()}
+else if(c.dataset.v){const i=+c.dataset.v;voted.has(i)?voted.delete(i):voted.add(i);try{localStorage.setItem("votes",JSON.stringify([...voted]))}catch(e){}render()}
+else if(c.dataset.d){const p=POSTS.find(x=>x.id==c.dataset.d);p.dl++;toast("Download started: "+p.n);render()}
+else if(c.id==="theme"){const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"}
+});
+$("q").addEventListener("input",e=>{query=e.target.value;render()});
+const dis=new Set(),FB={};let cur=null,dtab="Info";
+const BY=["@lunar_dev","@kazeport","@orangefox_id","@nocturne_team"];
+function det(p){return{st:p.id%3?"STABLE":"BETA",cn:"codename"+p.id,by:BY[p.id%4],from:"Reference device "+p.id,
+about:p.n+" for "+p.d+". Smooth daily-driver build with the latest patches.",
+bugs:["No known bugs yet."],guide:["Download the file below","Flash it in recovery","Format data","Reboot system"],
+credits:[BY[(p.id+1)%4]+" (base source)",BY[(p.id+2)%4]+" (bug fixes)"],
+log:["Initial release","Updated security patch","Fixed random freeze when scrolling"]}}
+function showDetail(p){cur=p;const d=det(p),on=voted.has(p.id),x=dis.has(p.id);
+const T=["Info","Changelog","Screenshots","Feedback","Disclaimer"];let b="";
+if(dtab==="Info")b=`<h4>Port Info</h4><dl class="kv"><b>Target device</b><span>${p.d}</span><b>Codename</b><span>${d.cn}</span><b>Ported from</b><span>${d.from}</span><b>Ported by</b><span>${d.by}</span></dl>
+<h4>About</h4><p class="meta">${d.about}</p><h4>Known bugs</h4><ul>${d.bugs.map(i=>`<li>${i}</li>`).join("")}</ul>
+<h4>Install guide</h4><ol>${d.guide.map(i=>`<li>${i}</li>`).join("")}</ol><h4>Credits</h4><ul>${d.credits.map(i=>`<li>${i}</li>`).join("")}</ul>
+<h4>Download</h4><button class="dl" data-d="${p.id}">Download · ${p.s}</button> <button class="ghost" data-donate>Donate</button>`;
+else if(dtab==="Changelog")b=`<h4>Changelog</h4><ul>${d.log.map(i=>`<li>${i}</li>`).join("")}</ul>`;
+else if(dtab==="Screenshots")b=`<h4>Screenshots</h4><div class="shots">${[1,2,3,4,5,6].map(i=>`<div class="shot">Screenshot ${i}</div>`).join("")}</div>`;
+else if(dtab==="Feedback"){const c=FB[p.id]||[];b=`<h4>Feedback</h4>${c.map(t=>`<div class="cm"></div>`).join("")||'<p class="meta">No feedback yet. Be the first to share how this build works on your device.</p>'}<textarea class="search" id="fb" placeholder="Write your feedback" aria-label="Feedback"></textarea><button class="dl" data-fb>Send feedback</button>`}
+else b=`<h4>Disclaimer</h4><p class="meta">Flash at your own risk. Back up your data first. The maintainers are not responsible for bricked devices or lost data.</p>`;
+$("detail").innerHTML=`<a class="back" href="#/">← Back to all posts</a><div class="banner" style="--h:${p.id*47%360}">${p.n}</div>
+<span class="tag st">${d.st}</span><h1 class="dt">${p.n}</h1><p class="meta">${p.d} · ${d.cn} · ${p.a}</p><p class="meta">Ported by ${d.by}</p>
+<div class="acts"><button class="ghost" data-copy>Copy link</button><button class="vote" data-v="${p.id}" aria-pressed="${on}">▲ ${p.v+(on?1:0)}</button><button class="vote" data-x="${p.id}" aria-pressed="${x}">▼ ${x?"Disliked":"Dislike"}</button></div>
+<div class="tabs" role="tablist">${T.map(t=>`<button class="tab" role="tab" data-dt="${t}" aria-selected="${t===dtab}">${t}</button>`).join("")}</div><div class="pane">${b}</div>`;
+(FB[p.id]||[]).forEach((t,i)=>{$("detail").querySelectorAll(".cm")[i].textContent=t})}
+function route(){const m=location.hash.match(/^#\/post\/(\d+)/),p=m&&POSTS.find(x=>x.id==m[1]);
+$("list").hidden=!!p;$("detail").hidden=!p;
+if(p){dtab="Info";showDetail(p)}else{cur=null;render()}scrollTo(0,0)}
+addEventListener("hashchange",route);
+document.addEventListener("click",e=>{const c=e.target.closest("button");if(!c||!cur)return;
+if(c.dataset.dt){dtab=c.dataset.dt;showDetail(cur)}
+else if(c.dataset.x){const i=+c.dataset.x;dis.has(i)?dis.delete(i):dis.add(i);showDetail(cur)}
+else if(c.dataset.fb){const t=$("fb").value.trim();if(t){(FB[cur.id]=FB[cur.id]||[]).push(t);showDetail(cur)}}
+else if(c.dataset.copy){try{navigator.clipboard.writeText(location.href).then(()=>toast("Link copied"),()=>toast("Copy the link from the address bar"))}catch(_){toast("Copy the link from the address bar")}}
+else if(c.dataset.donate)toast("Add your donation link here")
+else if(c.dataset.v||c.dataset.d)showDetail(cur)});
+route();
+</script>
+</body>
+</html>
